@@ -1,4 +1,35 @@
 {
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "git.autofetch": true,
+  "typescript.updateImportsOnFileMove.enabled": "never",
+  "editor.inlineSuggest.suppressSuggestions": true,
+  "diffEditor.maxComputationTime": 0,
+  "git.confirmSync": false,
+  "git.ignoreRebaseWarning": true,
+  "git.replaceTagsWhenPull": true,
+  "workbench.colorCustomizations": {
+    "editor.wordHighlightStrongBackground": "#0000", // syntax variable assignment
+    "editor.wordHighlightStrongBorder": "#0000",
+
+    "editor.wordHighlightBackground": "#0000", // syntax variable
+    "editor.wordHighlightBorder": "#0000"
+  },
+  "turboConsoleLog.includeLineNum": true,
+  "diffEditor.ignoreTrimWhitespace": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
