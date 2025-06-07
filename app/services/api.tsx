@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http:////localhost:5001/api"; // Replace with your backend URL
+const API_URL = "http://localhost:5001/api"; // Updated to match Postman collection
 
 interface User {
   id: string;
@@ -14,6 +14,7 @@ interface Hospital {
   address: string;
   averageRating: number;
   reviews: Review[];
+  doctors?: Doctor[];
 }
 
 interface Doctor {
@@ -40,6 +41,17 @@ interface AuthResponse {
   user: User;
 }
 
+interface CreateHospitalData {
+  name: string;
+  address: string;
+}
+
+interface CreateDoctorData {
+  name: string;
+  specialty: string;
+  hospitalId: string;
+}
+
 const fetchWithToken = async (
   url: string,
   options: RequestInit = {}
@@ -50,9 +62,14 @@ const fetchWithToken = async (
     ...(token && { Authorization: `Bearer ${token}` }),
   };
   const response = await fetch(`${API_URL}${url}`, { ...options, headers });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "An error occurred");
+  }
   return response.json();
 };
 
+// Auth endpoints
 export const login = (email: string, password: string): Promise<AuthResponse> =>
   fetchWithToken("/auth/login", {
     method: "POST",
@@ -74,10 +91,33 @@ export const getUser = (token: string): Promise<User> =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
+// Hospital endpoints
 export const getHospitals = (): Promise<Hospital[]> =>
   fetchWithToken("/hospitals");
+
 export const getHospital = (id: string): Promise<Hospital> =>
   fetchWithToken(`/hospitals/${id}`);
+
+export const createHospital = (data: CreateHospitalData): Promise<Hospital> =>
+  fetchWithToken("/hospitals", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+export const updateHospital = (
+  id: string,
+  data: Partial<CreateHospitalData>
+): Promise<Hospital> =>
+  fetchWithToken(`/hospitals/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+
+export const deleteHospital = (id: string): Promise<void> =>
+  fetchWithToken(`/hospitals/${id}`, {
+    method: "DELETE",
+  });
+
 export const submitHospitalReview = (
   id: string,
   review: { rating: number; comment: string }
@@ -87,9 +127,32 @@ export const submitHospitalReview = (
     body: JSON.stringify(review),
   });
 
+// Doctor endpoints
 export const getDoctors = (): Promise<Doctor[]> => fetchWithToken("/doctors");
+
 export const getDoctor = (id: string): Promise<Doctor> =>
   fetchWithToken(`/doctors/${id}`);
+
+export const createDoctor = (data: CreateDoctorData): Promise<Doctor> =>
+  fetchWithToken("/doctors", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+export const updateDoctor = (
+  id: string,
+  data: Partial<CreateDoctorData>
+): Promise<Doctor> =>
+  fetchWithToken(`/doctors/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+
+export const deleteDoctor = (id: string): Promise<void> =>
+  fetchWithToken(`/doctors/${id}`, {
+    method: "DELETE",
+  });
+
 export const submitDoctorReview = (
   id: string,
   review: { rating: number; comment: string }
@@ -99,4 +162,11 @@ export const submitDoctorReview = (
     body: JSON.stringify(review),
   });
 
-export type { Doctor, Hospital, Review, User };
+export type {
+  CreateDoctorData,
+  CreateHospitalData,
+  Doctor,
+  Hospital,
+  Review,
+  User,
+};

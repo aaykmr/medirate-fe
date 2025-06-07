@@ -1,6 +1,12 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as api from '../services/api';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import * as api from "../services/api";
 
 interface User {
   id: string;
@@ -16,21 +22,35 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
+
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadUser = async () => {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       if (token) {
         try {
           const userData = await api.getUser(token);
           setUser(userData);
         } catch (error) {
-          console.error('Error loading user:', error);
+          console.error("Error loading user:", error);
+          // If token is invalid, clear it
+          await AsyncStorage.removeItem("token");
         }
       }
       setLoading(false);
@@ -40,18 +60,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string) => {
     const response = await api.login(email, password);
-    await AsyncStorage.setItem('token', response.token);
+    await AsyncStorage.setItem("token", response.token);
     setUser(response.user);
   };
 
   const register = async (email: string, password: string, name: string) => {
     const response = await api.register(email, password, name);
-    await AsyncStorage.setItem('token', response.token);
+    await AsyncStorage.setItem("token", response.token);
     setUser(response.user);
   };
 
   const logout = async () => {
-    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem("token");
     setUser(null);
   };
 
