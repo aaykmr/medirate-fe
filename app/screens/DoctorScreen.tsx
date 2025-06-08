@@ -1,35 +1,36 @@
 import RatingComponent from "@/components/RatingComponent";
-import React, { useContext, useEffect, useState } from "react";
+import { getDoctor, submitDoctorReview } from "@/src/services/doctors";
+import React, { useEffect, useState } from "react";
 import { Button, FlatList, Text, TextInput, View } from "react-native";
 import tw from "twrnc";
-import { AuthContext } from "../context/AuthContext";
-import * as api from "../services/api";
+import { useAuth } from "../../src/context/AuthContext";
+import { Doctor } from "../../src/interfaces/Doctor";
+import { Review } from "../../src/interfaces/Review";
 
-const DoctorScreen = ({ route }: any) => {
-  const { id } = route.params;
-  const [doctor, setDoctor] = useState<any>(null);
-  const [rating, setRating] = useState<any>(0);
-  const [comment, setComment] = useState<any>("");
-  const { user } = useContext<any>(AuthContext);
+const DoctorScreen: React.FC = () => {
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchDoctor = async () => {
       try {
-        const data = await api.getDoctor(id);
+        const data = await getDoctor("1"); // Replace with actual doctor ID
         setDoctor(data);
       } catch (error) {
         console.error("Error fetching doctor:", error);
       }
     };
     fetchDoctor();
-  }, [id]);
+  }, []);
 
   const handleSubmitReview = async () => {
     try {
-      await api.submitDoctorReview(id, { rating, comment });
+      await submitDoctorReview("1", { rating, comment }); // Replace with actual doctor ID
       setRating(0);
       setComment("");
-      const data = await api.getDoctor(id);
+      const data = await getDoctor("1"); // Replace with actual doctor ID
       setDoctor(data);
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -62,8 +63,8 @@ const DoctorScreen = ({ route }: any) => {
       <Text style={tw`text-xl mb-2`}>Reviews</Text>
       <FlatList
         data={doctor.reviews}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }: { item: Review }) => (
           <View style={tw`p-2 border-b`}>
             <Text>Rating: {item.rating}</Text>
             <Text>{item.comment}</Text>

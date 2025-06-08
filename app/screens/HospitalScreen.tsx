@@ -1,21 +1,23 @@
 import RatingComponent from "@/components/RatingComponent";
-import React, { useContext, useEffect, useState } from "react";
+import { getHospital, submitHospitalReview } from "@/src/services/hospitals";
+import React, { useEffect, useState } from "react";
 import { Button, FlatList, Text, TextInput, View } from "react-native";
 import tw from "twrnc";
-import { AuthContext } from "../context/AuthContext";
-import * as api from "../services/api";
+import { useAuth } from "../../src/context/AuthContext";
 
 const HospitalScreen = ({ route }: any) => {
   const { id } = route.params;
   const [hospital, setHospital] = useState<any>(null);
   const [rating, setRating] = useState<any>(0);
   const [comment, setComment] = useState<any>("");
-  const { user } = useContext<any>(AuthContext);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchHospital = async () => {
       try {
-        const data = await api.getHospital(id);
+        const data = await getHospital(id);
+        console.log("🚀 ~ :19 ~ fetchHospital ~ data:", data);
+
         setHospital(data);
       } catch (error) {
         console.error("Error fetching hospital:", error);
@@ -26,10 +28,10 @@ const HospitalScreen = ({ route }: any) => {
 
   const handleSubmitReview = async () => {
     try {
-      await api.submitHospitalReview(id, { rating, comment });
+      await submitHospitalReview(id, { rating, comment });
       setRating(0);
       setComment("");
-      const data = await api.getHospital(id);
+      const data = await getHospital(id);
       setHospital(data);
     } catch (error) {
       console.error("Error submitting review:", error);

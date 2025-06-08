@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../src/context/AuthContext";
 
 export default function LoginScreen() {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,7 +17,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login, register } = useAuth();
+  const { userLogin, userRegister } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async () => {
@@ -29,9 +29,9 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       if (isLogin) {
-        await login(email, password);
+        await userLogin(email, password);
       } else {
-        await register(email, password, name);
+        await userRegister(email, password, name);
       }
     } catch (error) {
       Alert.alert(

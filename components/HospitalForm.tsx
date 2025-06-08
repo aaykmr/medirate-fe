@@ -1,11 +1,11 @@
+import {
+  createHospital,
+  CreateHospitalData,
+  updateHospital,
+} from "@/src/services/hospitals";
 import React, { useState } from "react";
 import { Alert, Button, TextInput, View } from "react-native";
 import tw from "twrnc";
-import {
-  createHospital,
-  updateHospital,
-  type CreateHospitalData,
-} from "../app/services/api";
 
 interface HospitalFormProps {
   hospitalId?: string;

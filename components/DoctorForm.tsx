@@ -1,14 +1,14 @@
+import { Hospital } from "@/src/interfaces/Hospital";
+import {
+  createDoctor,
+  CreateDoctorData,
+  updateDoctor,
+} from "@/src/services/doctors";
+import { getHospitals } from "@/src/services/hospitals";
 import { Picker } from "@react-native-picker/picker";
 import React, { useEffect, useState } from "react";
 import { Alert, Button, TextInput, View } from "react-native";
 import tw from "twrnc";
-import {
-  createDoctor,
-  getHospitals,
-  updateDoctor,
-  type CreateDoctorData,
-  type Hospital,
-} from "../app/services/api";
 
 interface DoctorFormProps {
   doctorId?: string;
@@ -90,9 +90,9 @@ const DoctorForm: React.FC<DoctorFormProps> = ({
           <Picker.Item label="Select a hospital" value="" />
           {hospitals.map((hospital) => (
             <Picker.Item
-              key={hospital._id}
+              key={hospital.id}
               label={hospital.name}
-              value={hospital._id}
+              value={hospital.id}
             />
           ))}
         </Picker>

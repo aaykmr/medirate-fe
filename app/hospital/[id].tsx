@@ -1,26 +1,19 @@
 import RatingComponent from "@/components/RatingComponent";
+import { getHospital, submitHospitalReview } from "@/src/services/hospitals";
 import { useLocalSearchParams } from "expo-router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, FlatList, Text, TextInput, View } from "react-native";
 import tw from "twrnc";
-import { AuthContext } from "../context/AuthContext";
-import {
-  getHospital,
-  Hospital,
-  Review,
-  submitHospitalReview,
-} from "../services/api";
+import { useAuth } from "../../src/context/AuthContext";
+import { Hospital } from "../../src/interfaces/Hospital";
+import { Review } from "../../src/interfaces/Review";
 
 const HospitalScreen: React.FC = () => {
   const { id } = useLocalSearchParams();
   const [hospital, setHospital] = useState<Hospital | null>(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const authContext = useContext(AuthContext);
-
-  if (!authContext)
-    throw new Error("AuthContext must be used within AuthProvider");
-  const { user } = authContext;
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchHospital = async () => {
@@ -71,7 +64,7 @@ const HospitalScreen: React.FC = () => {
       <Text style={tw`text-xl mb-2`}>Reviews</Text>
       <FlatList
         data={hospital.reviews}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }: { item: Review }) => (
           <View style={tw`p-2 border-b`}>
             <Text>Rating: {item.rating}</Text>

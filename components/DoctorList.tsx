@@ -1,8 +1,9 @@
+import { Doctor } from "@/src/interfaces/Doctor";
+import { deleteDoctor, getDoctors } from "@/src/services/doctors";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
 import tw from "twrnc";
-import { deleteDoctor, getDoctors, type Doctor } from "../app/services/api";
 
 const DoctorList: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -50,7 +51,7 @@ const DoctorList: React.FC = () => {
     <View style={tw`p-4 border-b border-gray-200`}>
       <View style={tw`flex-row justify-between items-center mb-2`}>
         <TouchableOpacity
-          onPress={() => router.push(`/doctor/${item._id}`)}
+          onPress={() => router.push(`/doctor/${item.id}`)}
           style={tw`flex-1`}
         >
           <Text style={tw`text-lg font-semibold`}>{item.name}</Text>
@@ -66,13 +67,13 @@ const DoctorList: React.FC = () => {
         </TouchableOpacity>
         <View style={tw`flex-row space-x-2`}>
           <TouchableOpacity
-            onPress={() => router.push(`/doctor/${item._id}/edit`)}
+            onPress={() => router.push(`/doctor/${item.id}/edit`)}
             style={tw`bg-blue-500 px-3 py-1 rounded`}
           >
             <Text style={tw`text-white`}>Edit</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleDelete(item._id)}
+            onPress={() => handleDelete(item.id)}
             style={tw`bg-red-500 px-3 py-1 rounded`}
           >
             <Text style={tw`text-white`}>Delete</Text>
@@ -87,7 +88,7 @@ const DoctorList: React.FC = () => {
       <FlatList
         data={doctors}
         renderItem={renderDoctor}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
         refreshing={isLoading}
         onRefresh={loadDoctors}
       />

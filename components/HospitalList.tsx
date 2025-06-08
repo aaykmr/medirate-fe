@@ -1,12 +1,9 @@
+import { Hospital } from "@/src/interfaces/Hospital";
+import { deleteHospital, getHospitals } from "@/src/services/hospitals";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
 import tw from "twrnc";
-import {
-  deleteHospital,
-  getHospitals,
-  type Hospital,
-} from "../app/services/api";
 
 const HospitalList: React.FC = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
@@ -54,7 +51,7 @@ const HospitalList: React.FC = () => {
     <View style={tw`p-4 border-b border-gray-200`}>
       <View style={tw`flex-row justify-between items-center mb-2`}>
         <TouchableOpacity
-          onPress={() => router.push(`/hospital/${item._id}`)}
+          onPress={() => router.push(`/hospital/${item.id}`)}
           style={tw`flex-1`}
         >
           <Text style={tw`text-lg font-semibold`}>{item.name}</Text>
@@ -65,13 +62,13 @@ const HospitalList: React.FC = () => {
         </TouchableOpacity>
         <View style={tw`flex-row space-x-2`}>
           <TouchableOpacity
-            onPress={() => router.push(`/hospital/${item._id}/edit`)}
+            onPress={() => router.push(`/hospital/${item.id}/edit`)}
             style={tw`bg-blue-500 px-3 py-1 rounded`}
           >
             <Text style={tw`text-white`}>Edit</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleDelete(item._id)}
+            onPress={() => handleDelete(item.id)}
             style={tw`bg-red-500 px-3 py-1 rounded`}
           >
             <Text style={tw`text-white`}>Delete</Text>
@@ -83,8 +80,8 @@ const HospitalList: React.FC = () => {
           <Text style={tw`font-semibold mb-1`}>Doctors:</Text>
           {item.doctors.map((doctor) => (
             <TouchableOpacity
-              key={doctor._id}
-              onPress={() => router.push(`/doctor/${doctor._id}`)}
+              key={doctor.id}
+              onPress={() => router.push(`/doctor/${doctor.id}`)}
               style={tw`ml-2 mb-1`}
             >
               <Text style={tw`text-gray-700`}>
@@ -102,7 +99,7 @@ const HospitalList: React.FC = () => {
       <FlatList
         data={hospitals}
         renderItem={renderHospital}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
         refreshing={isLoading}
         onRefresh={loadHospitals}
       />

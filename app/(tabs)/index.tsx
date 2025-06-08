@@ -1,8 +1,11 @@
+import { getDoctors } from "@/src/services/doctors";
+import { getHospitals } from "@/src/services/hospitals";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import tw from "twrnc";
-import { Doctor, getDoctors, getHospitals, Hospital } from "../services/api";
+import { Doctor } from "../../src/interfaces/Doctor";
+import { Hospital } from "../../src/interfaces/Hospital";
 
 const HomeScreen: React.FC = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
@@ -31,7 +34,7 @@ const HomeScreen: React.FC = () => {
   }) => (
     <TouchableOpacity
       style={tw`p-4 border-b`}
-      onPress={() => router.push(`/${type.toLowerCase()}/${item._id}`)}
+      onPress={() => router.push(`/${type.toLowerCase()}/${item.id}` as any)}
     >
       <Text style={tw`text-lg`}>{item.name}</Text>
       <Text>Rating: {item.averageRating.toFixed(1)}</Text>
@@ -43,13 +46,13 @@ const HomeScreen: React.FC = () => {
       <Text style={tw`text-2xl mb-4`}>Hospitals</Text>
       <FlatList
         data={hospitals}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => renderItem({ item, type: "Hospital" })}
       />
       <Text style={tw`text-2xl mb-4 mt-4`}>Doctors</Text>
       <FlatList
         data={doctors}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => renderItem({ item, type: "Doctor" })}
       />
     </View>
