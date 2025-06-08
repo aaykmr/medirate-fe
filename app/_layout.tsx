@@ -1,11 +1,11 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import React, { useEffect } from "react";
+import Toast from "react-native-toast-message";
 import { AuthProvider, useAuth } from "../src/context/AuthContext";
 
 // This component handles the authentication state and redirects accordingly
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
-  console.log("🚀 ~ :8 ~ AuthGuard ~ user:", user);
   const segments = useSegments();
   const router = useRouter();
 
@@ -69,6 +69,7 @@ export default function RootLayout() {
           />
         </Stack>
       </AuthGuard>
+      <Toast />
     </AuthProvider>
   );
 }

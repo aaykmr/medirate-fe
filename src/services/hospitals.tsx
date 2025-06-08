@@ -7,8 +7,14 @@ export interface CreateHospitalData {
   address: string;
 }
 // Hospital endpoints
-export const getHospitals = (): Promise<Hospital[]> =>
-  fetchWithToken("/hospitals");
+export const getHospitals = ({
+  latitude,
+  longitude,
+  radius,
+}: any): Promise<Hospital[]> =>
+  fetchWithToken(
+    `/hospitals?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
+  );
 
 export const getHospital = (id: string): Promise<Hospital> =>
   fetchWithToken(`/hospitals/${id}`);
